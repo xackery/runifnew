@@ -83,6 +83,7 @@ func main() {
 		if strings.Contains(hash, "\n") {
 			hash = strings.ReplaceAll(hash, "\n", "")
 		}
+		fmt.Println(path, "hash:", hash)
 		if strings.EqualFold(hash, latestHash) {
 			fmt.Println("TRUE:", path, "was updated, triggering cmd")
 			isFound = true
