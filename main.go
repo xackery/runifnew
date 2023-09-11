@@ -38,7 +38,7 @@ func main() {
 		os.Exit(1)
 	}
 
-	if urlPath == "" {
+	if url != "none" && urlPath == "" {
 		usage()
 		os.Exit(1)
 	}
