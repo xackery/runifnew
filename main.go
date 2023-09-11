@@ -32,7 +32,6 @@ func main() {
 		usage()
 		os.Exit(1)
 	}
-	fmt.Println("If TRUE, run:", cmd)
 
 	if url == "" {
 		usage()
@@ -43,6 +42,8 @@ func main() {
 		usage()
 		os.Exit(1)
 	}
+	fmt.Println("runifnew version:", Version)
+	fmt.Println("If TRUE, run:", cmd)
 	fmt.Println("If FALSE, fetch:", url, "and save to:", urlPath)
 
 	gitPath, err := exec.LookPath("git")
@@ -51,9 +52,12 @@ func main() {
 		os.Exit(1)
 	}
 
-	cmdPath, err := exec.LookPath(cmd)
+	cmdBinary := strings.Split(cmd, " ")[0]
+	cmdArgs := strings.Split(cmd, " ")[1:]
+
+	cmdPath, err := exec.LookPath(cmdBinary)
 	if err != nil {
-		fmt.Println("cmd", cmd, "is not installed, please install cmd and try again")
+		fmt.Println("cmd", cmdBinary, "is not installed, please install cmd and try again")
 		os.Exit(1)
 	}
 
@@ -86,9 +90,7 @@ func main() {
 		}
 	}
 	if isFound {
-		// take off first part of command
-		cmd := strings.Join(flag.Args(), " ")
-		result, err := run(exec.Command(cmdPath, cmd))
+		result, err := run(exec.Command(cmdPath, cmdArgs...))
 		if err != nil {
 			fmt.Println("Output:", result)
 			fmt.Println("Error running cmd:", err)
