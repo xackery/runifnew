@@ -1,5 +1,5 @@
 NAME ?= runifnew
-VERSION := 0.1.1
+VERSION := 0.1.2
 
 sanitize:
 	rm -rf vendor/
