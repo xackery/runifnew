@@ -51,6 +51,12 @@ func main() {
 		os.Exit(1)
 	}
 
+	cmdPath, err := exec.LookPath(cmd)
+	if err != nil {
+		fmt.Println("cmd", cmd, "is not installed, please install cmd and try again")
+		os.Exit(1)
+	}
+
 	latestHash, err := run(exec.Command(gitPath, "rev-parse", "HEAD"))
 	if err != nil {
 		fmt.Println("Output:", latestHash)
@@ -80,7 +86,9 @@ func main() {
 		}
 	}
 	if isFound {
-		result, err := run(exec.Command(cmd))
+		// take off first part of command
+		cmd := strings.Join(flag.Args(), " ")
+		result, err := run(exec.Command(cmdPath, cmd))
 		if err != nil {
 			fmt.Println("Output:", result)
 			fmt.Println("Error running cmd:", err)
