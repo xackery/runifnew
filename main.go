@@ -100,6 +100,10 @@ func main() {
 		fmt.Println("Output:", result)
 		return
 	}
+	if strings.ToLower(url) == "none" {
+		fmt.Println("FALSE: exiting gracefully no url set")
+		return
+	}
 	fmt.Println("FALSE: Fetching url:", url)
 	resp, err := http.Get(url)
 	if err != nil {
@@ -129,7 +133,7 @@ func main() {
 
 func usage() {
 	fmt.Println("Usage: runifnew -cmd [build] -url [https://download] -urlPath bin/test [folders...]")
-	fmt.Println("This program runs build if the git version on folders... matches the latest commit, otherwise it fetches the download url")
+	fmt.Println("This program runs build if the git version on folders... matches the latest commit, otherwise it fetches the download url. (You can set -url none to do nothing if matches)")
 }
 
 func run(cmd *exec.Cmd) (string, error) {
