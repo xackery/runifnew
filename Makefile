@@ -1,5 +1,5 @@
 NAME ?= runifnew
-VERSION := 0.1.3
+VERSION := 0.1.4
 
 sanitize:
 	rm -rf vendor/
@@ -29,11 +29,11 @@ build-darwin:
 .PHONY: build-linux
 build-linux:
 	@echo "Building Linux ${VERSION}"
-	@GOOS=linux GOARCH=amd64 go build -buildmode=pie -ldflags="-X main.Version=${VERSION} -w" -o bin/${NAME}-linux main.go		
+	@GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -buildmode=pie -ldflags="-X main.Version=${VERSION} -w" -o bin/${NAME}-linux main.go		
 .PHONY: build-windows
 build-windows:
 	@echo "Building Windows ${VERSION}"
-	@GOOS=windows GOARCH=amd64 go build -buildmode=pie -ldflags="-X main.Version=${VERSION} -s -w" -o bin/${NAME}.exe main.go
+	@GOOS=windows GOARCH=amd64 CGO_ENABLED=0 go build -buildmode=pie -ldflags="-X main.Version=${VERSION} -s -w" -o bin/${NAME}.exe main.go
 
 
 # CICD triggers this
