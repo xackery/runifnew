@@ -74,7 +74,7 @@ func main() {
 
 	isFound := false
 	for _, path := range flag.Args() {
-		hash, err := run(exec.Command(gitPath, "log", "-n 1", "--pretty=format:%H", "--", path))
+		hash, err := run(exec.Command(gitPath, "log", "-n", "1", "--pretty=format:%H", "--", path))
 		if err != nil {
 			fmt.Println("Output:", hash)
 			fmt.Println("Error getting git hash:", err)
