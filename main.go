@@ -123,6 +123,8 @@ func usage() {
 
 func run(cmd *exec.Cmd) (string, error) {
 	fmt.Println("Executing command:", strings.Join(cmd.Args, " "))
+	cmd.Env = os.Environ()
+
 	buf := &bytes.Buffer{}
 	cmd.Stdout = buf
 	cmd.Stderr = buf
