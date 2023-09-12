@@ -16,6 +16,7 @@ var (
 	// Version is exported during build
 	Version   string
 	isVerbose bool
+	buffer    string
 )
 
 func main() {
@@ -55,6 +56,7 @@ func main() {
 	gitPath, err := exec.LookPath("git")
 	if err != nil {
 		println("git is not installed, please install git and try again")
+		failDump()
 		os.Exit(1)
 	}
 
@@ -64,6 +66,7 @@ func main() {
 	cmdPath, err := exec.LookPath(cmdBinary)
 	if err != nil {
 		println("cmd", cmdBinary, "is not installed, please install cmd and try again")
+		failDump()
 		os.Exit(1)
 	}
 
@@ -71,6 +74,7 @@ func main() {
 	if err != nil {
 		println("Output:", latestHash)
 		println("Error getting git hash:", err)
+		failDump()
 		os.Exit(1)
 	}
 	if strings.Contains(latestHash, "\n") {
@@ -84,6 +88,7 @@ func main() {
 		if err != nil {
 			println("Output:", hash)
 			println("Error getting git hash:", err)
+			failDump()
 			os.Exit(1)
 		}
 		if strings.Contains(hash, "\n") {
@@ -102,6 +107,7 @@ func main() {
 		if err != nil {
 			println("Output:", result)
 			println("Error running cmd:", err)
+			failDump()
 			os.Exit(1)
 		}
 		println("Output:", result)
@@ -115,23 +121,27 @@ func main() {
 	resp, err := http.Get(url)
 	if err != nil {
 		println("Error fetching url:", err)
+		failDump()
 		os.Exit(1)
 	}
 	defer resp.Body.Close()
 	if resp.StatusCode != 200 {
 		println("Error fetching url, status code:", resp.StatusCode)
+		failDump()
 		os.Exit(1)
 	}
 	println("Downloaded url:", url)
 	f, err := os.Create(urlPath)
 	if err != nil {
 		println("Error creating file:", err)
+		failDump()
 		os.Exit(1)
 	}
 	defer f.Close()
 	_, err = io.Copy(f, resp.Body)
 	if err != nil {
 		println("Error writing file:", err)
+		failDump()
 		os.Exit(1)
 	}
 	fmt.Println("[runifnew] Saved url to:", urlPath)
@@ -158,8 +168,18 @@ func run(cmd *exec.Cmd) (string, error) {
 }
 
 func println(a ...interface{}) {
-	if isVerbose {
-		fmt.Printf("[runifnew] ")
-		fmt.Println(a...)
+	if !isVerbose {
+		buffer += fmt.Sprintln(a...)
+		return
 	}
+	fmt.Printf("[runifnew] ")
+	fmt.Println(a...)
+}
+
+func failDump() {
+	if buffer == "" {
+		return
+	}
+	fmt.Println(buffer)
+	buffer = ""
 }
