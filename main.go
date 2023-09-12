@@ -21,7 +21,7 @@ var (
 func main() {
 	var err error
 
-	if len(os.Args) > 0 && os.Args[1] == "version" {
+	if len(os.Args) > 1 && os.Args[1] == "version" {
 		fmt.Println("runifnew version:", Version)
 		os.Exit(0)
 	}
